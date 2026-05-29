@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 💬 Discussões
+    url: https://github.com/marcelomartins/hass-transportes-pt/discussions
+    about: Perguntas gerais, ideias, ou ajuda com configuração
+  - name: 📖 Documentação
+    url: https://github.com/marcelomartins/hass-transportes-pt#readme
+    about: Lê o README antes de abrir uma issue

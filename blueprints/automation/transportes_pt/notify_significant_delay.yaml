@@ -1,0 +1,76 @@
+blueprint:
+  name: "Transportes PT: Notificar atraso significativo"
+  description: >
+    Envia uma notificação quando o atraso de um transporte excede um limite definido.
+    Compara a hora estimada com a hora planeada para detetar atrasos.
+  domain: automation
+  author: "Transportes PT"
+  input:
+    stop_sensor:
+      name: Sensor da paragem/estação
+      description: Sensor de chegadas a monitorizar
+      selector:
+        entity:
+          domain: sensor
+          integration: transportes_pt
+    delay_threshold:
+      name: Limiar de atraso (minutos)
+      description: Notificar quando o atraso excede este valor
+      default: 10
+      selector:
+        number:
+          min: 3
+          max: 60
+          unit_of_measurement: min
+    notify_service:
+      name: Serviço de notificação
+      description: Serviço a usar para enviar a notificação
+      default: notify.notify
+      selector:
+        text:
+
+trigger:
+  - platform: template
+    value_template: >
+      {% set attrs = state_attr(states | selectattr('entity_id', 'eq', '') | map(attribute='entity_id') | first, '') %}
+      false
+  - platform: state
+    entity_id: !input stop_sensor
+
+condition:
+  - condition: template
+    value_template: >
+      {% set attrs = state_attr(trigger.entity_id, 'arrivals') %}
+      {% if attrs and attrs | length > 0 %}
+        {% set est = attrs[0].get('estimated', '') %}
+        {% set sched = attrs[0].get('scheduled', '') %}
+        {% if est and sched %}
+          {% set est_parts = est.split(':') %}
+          {% set sched_parts = sched.split(':') %}
+          {% if est_parts | length == 3 and sched_parts | length == 3 %}
+            {% set est_min = est_parts[0] | int * 60 + est_parts[1] | int %}
+            {% set sched_min = sched_parts[0] | int * 60 + sched_parts[1] | int %}
+            {{ (est_min - sched_min) > (states.input_number | int) }}
+          {% else %}
+            false
+          {% endif %}
+        {% else %}
+          false
+        {% endif %}
+      {% else %}
+        false
+      {% endif %}
+
+action:
+  - service: !input notify_service
+    data:
+      title: "🕐 Atraso significativo"
+      message: >
+        {% set attrs = state_attr(trigger.entity_id, 'arrivals') %}
+        {% if attrs and attrs | length > 0 %}
+          Linha {{ attrs[0].line }} para {{ attrs[0].destination }}
+          tem um atraso.
+          Estimado: {{ attrs[0].estimated }} | Planeado: {{ attrs[0].scheduled }}
+        {% else %}
+          Detetado atraso na paragem {{ state_attr(trigger.entity_id, 'stop_id') }}.
+        {% endif %}

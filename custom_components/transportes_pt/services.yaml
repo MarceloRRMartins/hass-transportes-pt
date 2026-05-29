@@ -1,0 +1,25 @@
+plan_trip:
+  name: Plan Trip
+  description: Plan a trip between two transit stops.
+  fields:
+    origin:
+      name: Origin Stop ID
+      description: The stop ID where the trip starts.
+      required: true
+      example: "060002"
+      selector:
+        text:
+    destination:
+      name: Destination Stop ID
+      description: The stop ID where the trip ends.
+      required: true
+      example: "060003"
+      selector:
+        text:
+    departure_time:
+      name: Departure Time
+      description: Optional departure time (ISO format). Defaults to now.
+      required: false
+      example: "2026-05-29T08:00:00"
+      selector:
+        text:

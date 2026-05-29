@@ -1,0 +1,78 @@
+name: 🚌 Novo Operador
+description: Pedir suporte para um novo operador de transportes
+title: "[Operador]: "
+labels: ["new-provider", "enhancement"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Queres suporte para um novo operador? Ótimo! Precisamos de algumas informações sobre a fonte de dados.
+
+  - type: input
+    id: operator-name
+    attributes:
+      label: Nome do operador
+      placeholder: "Ex: Metro do Mondego"
+    validations:
+      required: true
+
+  - type: input
+    id: region
+    attributes:
+      label: Região / Cidade
+      placeholder: "Ex: Coimbra"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: data-format
+    attributes:
+      label: Formato dos dados
+      options:
+        - GTFS Static (ZIP com ficheiros CSV)
+        - GTFS Realtime (Protocol Buffers)
+        - REST API (JSON)
+        - NGSI / FIWARE
+        - SIRI
+        - Outro / Não sei
+    validations:
+      required: true
+
+  - type: input
+    id: data-url
+    attributes:
+      label: URL do feed / API
+      description: URL onde os dados estão disponíveis (GTFS ZIP, endpoint API, etc.)
+      placeholder: "https://..."
+    validations:
+      required: false
+
+  - type: dropdown
+    id: realtime
+    attributes:
+      label: Tem dados em tempo real?
+      options:
+        - Sim (posições GPS / ETAs em tempo real)
+        - Apenas horário estático
+        - Não sei
+    validations:
+      required: true
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notas adicionais
+      description: Documentação, limitações, autenticação necessária, etc.
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Verificações
+      options:
+        - label: Verifiquei que os dados são públicos e de livre acesso
+          required: true
+        - label: Testei que o URL funciona (consegui descarregar o ficheiro)
+          required: false

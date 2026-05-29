@@ -1,0 +1,38 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate tag matches manifest version
+        run: |
+          TAG_VERSION="${GITHUB_REF#refs/tags/v}"
+          MANIFEST_VERSION=$(python3 -c "import json; print(json.load(open('custom_components/transportes_pt/manifest.json'))['version'])")
+          if [ "$TAG_VERSION" != "$MANIFEST_VERSION" ]; then
+            echo "ERROR: Tag version ($TAG_VERSION) does not match manifest.json ($MANIFEST_VERSION)"
+            exit 1
+          fi
+
+      - name: Create release archive
+        run: |
+          cd custom_components/transportes_pt
+          zip -r ../../transportes_pt.zip .
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          files: transportes_pt.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

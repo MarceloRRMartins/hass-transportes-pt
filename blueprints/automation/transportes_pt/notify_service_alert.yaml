@@ -1,0 +1,42 @@
+blueprint:
+  name: "Transportes PT: Notificar alerta na minha linha"
+  description: >
+    Envia uma notificação quando há um alerta de serviço ativo nas linhas/paragens configuradas.
+  domain: automation
+  author: "Transportes PT"
+  input:
+    alert_sensor:
+      name: Sensor de alertas
+      description: Binary sensor de alertas de serviço
+      selector:
+        entity:
+          domain: binary_sensor
+          integration: transportes_pt
+    notify_service:
+      name: Serviço de notificação
+      description: Serviço a usar para enviar a notificação
+      default: notify.notify
+      selector:
+        text:
+
+trigger:
+  - platform: state
+    entity_id: !input alert_sensor
+    to: "on"
+
+condition: []
+
+action:
+  - service: !input notify_service
+    data:
+      title: "⚠️ Alerta de serviço"
+      message: >
+        {% set alerts = state_attr(trigger.entity_id, 'alerts') %}
+        {% if alerts and alerts | length > 0 %}
+          {{ alerts[0].title }}
+          {% if alerts[0].description %}
+            — {{ alerts[0].description }}
+          {% endif %}
+        {% else %}
+          Há um novo alerta de serviço nos transportes.
+        {% endif %}

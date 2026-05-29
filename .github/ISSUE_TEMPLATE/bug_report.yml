@@ -1,0 +1,116 @@
+name: 🐛 Bug Report
+description: Reportar um problema com a integração
+title: "[Bug]: "
+labels: ["bug", "triage"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Obrigado por reportar este bug! Preenche o formulário abaixo para nos ajudar a resolver o problema.
+
+  - type: input
+    id: ha-version
+    attributes:
+      label: Versão do Home Assistant
+      description: Em qual versão do HA estás? (Definições → Sobre)
+      placeholder: "2026.5.0"
+    validations:
+      required: true
+
+  - type: input
+    id: integration-version
+    attributes:
+      label: Versão da integração
+      description: Versão do Transportes PT instalada
+      placeholder: "0.1.0"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: provider
+    attributes:
+      label: Operador de transportes
+      description: Qual operador estás a usar?
+      options:
+        - Carris Metropolitana
+        - Carris (CCFL)
+        - STCP (Porto)
+        - Metro do Porto
+        - Metro de Lisboa
+        - CP - Comboios de Portugal
+        - Fertagus
+        - Transtejo Soflusa
+        - MTS - Metro Sul do Tejo
+        - TCB (Barreiro)
+        - MobiCascais
+        - TUB (Braga)
+        - TUBA (Barcelos)
+        - Guimabus (Guimarães)
+        - Mobiave (V.N. Famalicão)
+        - CIM Tâmega e Sousa
+        - Busway (Coimbra)
+        - Busway CIRA (Aveiro)
+        - Horários do Funchal
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Descrição do problema
+      description: Descreve o que acontece e o que esperavas que acontecesse
+      placeholder: |
+        O que acontece:
+        O que esperava:
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Passos para reproduzir
+      description: Como podemos reproduzir o problema?
+      placeholder: |
+        1. Vai a '...'
+        2. Clica em '...'
+        3. Vê o erro
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs relevantes
+      description: |
+        Cola aqui logs do Home Assistant (Definições → Sistema → Logs).
+        Ativa debug logging com:
+        ```yaml
+        logger:
+          logs:
+            custom_components.transportes_pt: debug
+        ```
+      render: shell
+    validations:
+      required: false
+
+  - type: textarea
+    id: config
+    attributes:
+      label: Configuração
+      description: Configuração da integração (remove dados sensíveis)
+      render: yaml
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Verificações
+      options:
+        - label: Confirmei que estou a usar a última versão da integração
+          required: true
+        - label: Procurei issues existentes e não encontrei duplicado
+          required: true
+        - label: Reiniciei o Home Assistant após instalar/atualizar
+          required: true

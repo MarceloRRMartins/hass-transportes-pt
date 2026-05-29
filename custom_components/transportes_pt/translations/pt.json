@@ -1,0 +1,35 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Transportes PT",
+        "description": "Selecione um operador de transportes.",
+        "data": {
+          "provider": "Operador de transportes"
+        }
+      },
+      "stops": {
+        "title": "Selecionar Paragens",
+        "description": "Escolha as paragens que deseja monitorizar.",
+        "data": {
+          "stops": "Paragens"
+        }
+      },
+      "options": {
+        "title": "Opções",
+        "description": "Configure opções avançadas.",
+        "data": {
+          "lines": "Filtrar por linhas (IDs separados por vírgula, deixe vazio para todas)",
+          "enable_vehicles": "Ativar rastreamento de veículos"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Não foi possível ligar à API de transportes.",
+      "no_stops": "Selecione pelo menos uma paragem."
+    },
+    "abort": {
+      "already_configured": "Este operador já está configurado."
+    }
+  }
+}

@@ -1,0 +1,51 @@
+# Branch Protection Rules
+#
+# Apply these settings via GitHub UI:
+# Settings → Branches → Add branch protection rule
+#
+# Or via GitHub CLI:
+# gh api repos/{owner}/{repo}/branches/{branch}/protection -X PUT --input branch-protection.json
+#
+# This file documents the required settings. Apply manually or via Terraform/Pulumi.
+
+rules:
+  main:
+    # Require pull request before merging
+    required_pull_request_reviews:
+      required_approving_review_count: 1
+      dismiss_stale_reviews: true
+      require_code_owner_reviews: true
+      require_last_push_approval: true
+
+    # Require status checks to pass
+    required_status_checks:
+      strict: true  # Require branch to be up to date
+      contexts:
+        - "lint"
+        - "test"
+        - "typecheck"
+
+    # Require signed commits
+    required_signatures: true
+
+    # Restrict pushes
+    enforce_admins: true
+    allow_force_pushes: false
+    allow_deletions: false
+
+    # Restrict who can push (only via PR)
+    restrictions: null  # No direct pushes allowed
+
+  develop:
+    required_pull_request_reviews:
+      required_approving_review_count: 0  # Auto-merge after CI
+      dismiss_stale_reviews: false
+
+    required_status_checks:
+      strict: false
+      contexts:
+        - "lint"
+        - "test"
+
+    allow_force_pushes: false
+    allow_deletions: false

@@ -1,0 +1,75 @@
+name: ✨ Feature Request
+description: Sugerir uma nova funcionalidade
+title: "[Feature]: "
+labels: ["enhancement"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Obrigado pela sugestão! Descreve a funcionalidade que gostarias de ver.
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: Categoria
+      options:
+        - Novo operador de transportes
+        - Melhoria de operador existente
+        - Nova entidade / sensor
+        - Interface / Lovelace card
+        - Automação / Blueprint
+        - Performance
+        - Outro
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Descrição da funcionalidade
+      description: Descreve claramente o que gostarias que existisse
+      placeholder: |
+        Como utilizador, quero...
+        Para que possa...
+    validations:
+      required: true
+
+  - type: textarea
+    id: use-case
+    attributes:
+      label: Caso de uso
+      description: Descreve o cenário concreto onde isto seria útil
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternativas consideradas
+      description: Existem alternativas ou workarounds que já tentaste?
+    validations:
+      required: false
+
+  - type: textarea
+    id: data-source
+    attributes:
+      label: Fonte de dados
+      description: |
+        Se é um novo operador, indica:
+        - Nome do operador
+        - URL do feed GTFS ou API
+        - Se tem dados em tempo real
+      render: markdown
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Verificações
+      options:
+        - label: Procurei issues/PRs existentes e não encontrei duplicado
+          required: true
+        - label: Estou disponível para contribuir com um PR se aprovado
+          required: false

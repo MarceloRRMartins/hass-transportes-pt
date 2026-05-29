@@ -1,0 +1,16 @@
+# Code Owners
+# These users will be automatically requested for review on PRs that touch their areas.
+# See: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Default owner — reviews everything
+* @marcelomartins
+
+# Provider-specific ownership
+custom_components/transportes_pt/providers/ @marcelomartins
+
+# CI and automation
+.github/ @marcelomartins
+
+# Config flow and integration setup
+custom_components/transportes_pt/config_flow.py @marcelomartins
+custom_components/transportes_pt/__init__.py @marcelomartins

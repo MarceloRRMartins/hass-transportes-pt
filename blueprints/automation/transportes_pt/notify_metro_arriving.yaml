@@ -1,0 +1,46 @@
+blueprint:
+  name: "Transportes PT: Notificar metro a X minutos"
+  description: >
+    Envia uma notificação quando o próximo metro está a X minutos da estação.
+    Ideal para Metro de Lisboa, Metro do Porto e Metro Transportes do Sul.
+  domain: automation
+  author: "Transportes PT"
+  input:
+    stop_sensor:
+      name: Sensor da estação
+      description: Sensor de chegadas da estação de metro
+      selector:
+        entity:
+          domain: sensor
+          integration: transportes_pt
+    minutes_threshold:
+      name: Minutos antes da chegada
+      description: Notificar quando o metro está a este número de minutos
+      default: 3
+      selector:
+        number:
+          min: 1
+          max: 15
+          unit_of_measurement: min
+    notify_service:
+      name: Serviço de notificação
+      description: Serviço a usar para enviar a notificação (ex. notify.mobile_app_phone)
+      default: notify.notify
+      selector:
+        text:
+
+trigger:
+  - platform: numeric_state
+    entity_id: !input stop_sensor
+    below: !input minutes_threshold
+
+condition: []
+
+action:
+  - service: !input notify_service
+    data:
+      title: "🚇 Metro a chegar!"
+      message: >
+        Linha {{ state_attr(trigger.entity_id, 'next_line') }}
+        para {{ state_attr(trigger.entity_id, 'next_destination') }}
+        chega em {{ states(trigger.entity_id) }} minutos.

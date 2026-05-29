@@ -1,0 +1,35 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Transportes PT",
+        "description": "Select a transit provider to configure.",
+        "data": {
+          "provider": "Transit provider"
+        }
+      },
+      "stops": {
+        "title": "Select Stops",
+        "description": "Choose the stops you want to monitor.",
+        "data": {
+          "stops": "Stops"
+        }
+      },
+      "options": {
+        "title": "Options",
+        "description": "Configure advanced options.",
+        "data": {
+          "lines": "Filter by line IDs (comma-separated, leave empty for all)",
+          "enable_vehicles": "Enable vehicle tracking"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Unable to connect to the transit API.",
+      "no_stops": "Please select at least one stop."
+    },
+    "abort": {
+      "already_configured": "This provider is already configured."
+    }
+  }
+}
