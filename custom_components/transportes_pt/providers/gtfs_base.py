@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import logging
 import time
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 import aiohttp
 
@@ -46,6 +46,12 @@ class GtfsProvider(TransitProvider):
         self._owns_session = session is None
         self._gtfs_data: GtfsData | None = None
         self._gtfs_last_fetch: float = 0
+
+    @property
+    def session(self) -> aiohttp.ClientSession:
+        """Return the active session, raising if not initialized."""
+        assert self._session is not None, "Provider not initialized. Call async_init() first."
+        return self._session
 
     @property
     def gtfs_url(self) -> str:
@@ -92,7 +98,7 @@ class GtfsProvider(TransitProvider):
     async def async_test_connection(self) -> bool:
         """Test if the GTFS feed is reachable."""
         try:
-            async with self._session.head(
+            async with self.session.head(
                 self.gtfs_url,
                 timeout=aiohttp.ClientTimeout(total=15),
                 headers=self.gtfs_headers,
@@ -100,7 +106,7 @@ class GtfsProvider(TransitProvider):
             ) as resp:
                 # Some servers don't support HEAD, try GET with range
                 if resp.status == 405:
-                    async with self._session.get(
+                    async with self.session.get(
                         self.gtfs_url,
                         timeout=aiohttp.ClientTimeout(total=15),
                         headers={**self.gtfs_headers, "Range": "bytes=0-0"},
@@ -119,16 +125,14 @@ class GtfsProvider(TransitProvider):
 
         try:
             _LOGGER.debug("Downloading GTFS feed from %s", self.gtfs_url)
-            async with self._session.get(
+            async with self.session.get(
                 self.gtfs_url,
                 timeout=aiohttp.ClientTimeout(total=120),
                 headers=self.gtfs_headers,
                 allow_redirects=True,
             ) as resp:
                 if resp.status != 200:
-                    _LOGGER.warning(
-                        "%s: GTFS download returned %s", self.name, resp.status
-                    )
+                    _LOGGER.warning("%s: GTFS download returned %s", self.name, resp.status)
                     return self._gtfs_data  # Return stale data if available
                 data = await resp.read()
 
@@ -155,7 +159,7 @@ class GtfsProvider(TransitProvider):
         if not gtfs:
             return []
 
-        now = datetime.now(tz=timezone.utc)
+        now = datetime.now(tz=UTC)
 
         # Get arrivals from GTFS-RT TripUpdates if available
         rt_arrivals = await self._get_rt_arrivals(stop_id)
@@ -188,7 +192,7 @@ class GtfsProvider(TransitProvider):
         try:
             from .gtfs_rt_utils import parse_trip_updates
 
-            async with self._session.get(
+            async with self.session.get(
                 url,
                 timeout=aiohttp.ClientTimeout(total=15),
                 headers=self.gtfs_headers,
@@ -210,7 +214,7 @@ class GtfsProvider(TransitProvider):
 
                 arrival_unix = u.get("arrival_time")
                 arrival_iso = (
-                    datetime.fromtimestamp(arrival_unix, tz=timezone.utc).isoformat()
+                    datetime.fromtimestamp(arrival_unix, tz=UTC).isoformat()
                     if arrival_unix
                     else None
                 )
@@ -246,7 +250,7 @@ class GtfsProvider(TransitProvider):
         try:
             from .gtfs_rt_utils import parse_alerts
 
-            async with self._session.get(
+            async with self.session.get(
                 url,
                 timeout=aiohttp.ClientTimeout(total=15),
                 headers=self.gtfs_headers,
@@ -260,9 +264,7 @@ class GtfsProvider(TransitProvider):
             _LOGGER.debug("%s: GTFS-RT alerts error: %s", self.name, err)
             return []
 
-    async def async_get_vehicles(
-        self, line_ids: list[str] | None = None
-    ) -> list[VehiclePosition]:
+    async def async_get_vehicles(self, line_ids: list[str] | None = None) -> list[VehiclePosition]:
         """Get vehicle positions from GTFS-RT if available."""
         url = self.gtfs_rt_vehicle_positions_url
         if not url:
@@ -271,7 +273,7 @@ class GtfsProvider(TransitProvider):
         try:
             from .gtfs_rt_utils import parse_vehicle_positions
 
-            async with self._session.get(
+            async with self.session.get(
                 url,
                 timeout=aiohttp.ClientTimeout(total=15),
                 headers=self.gtfs_headers,
@@ -310,9 +312,7 @@ class GtfsProvider(TransitProvider):
             line_names = []
             for rid in route_ids:
                 route = gtfs.routes.get(rid, {})
-                line_names.append(
-                    route.get("route_short_name", route.get("route_long_name", rid))
-                )
+                line_names.append(route.get("route_short_name", route.get("route_long_name", rid)))
 
             stops.append(
                 Stop(

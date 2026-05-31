@@ -4,11 +4,10 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
 
-from homeassistant.core import HomeAssistant, ServiceCall, callback
-from homeassistant.helpers import config_validation as cv
 import voluptuous as vol
+from homeassistant.core import HomeAssistant, ServiceCall
+from homeassistant.helpers import config_validation as cv
 
 from .const import DOMAIN
 from .coordinator import TransportesCoordinator
@@ -103,9 +102,7 @@ async def async_setup_services(hass: HomeAssistant) -> None:
                 },
             )
 
-    hass.services.async_register(
-        DOMAIN, SERVICE_PLAN_TRIP, handle_plan_trip, schema=SERVICE_SCHEMA
-    )
+    hass.services.async_register(DOMAIN, SERVICE_PLAN_TRIP, handle_plan_trip, schema=SERVICE_SCHEMA)
 
 
 async def async_unload_services(hass: HomeAssistant) -> None:

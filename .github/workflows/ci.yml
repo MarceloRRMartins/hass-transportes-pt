@@ -42,17 +42,18 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.11", "3.12"]
+        python-version: ["3.12"]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
           cache: pip
-      - run: pip install pytest pytest-asyncio pytest-cov aiohttp gtfs-realtime-bindings homeassistant
+      - run: |
+          pip install pytest pytest-asyncio pytest-cov aiohttp gtfs-realtime-bindings voluptuous python-slugify pyyaml
+          pip install homeassistant --no-deps
       - run: pytest tests/ -v --cov=custom_components/transportes_pt --cov-report=xml --cov-report=term-missing --cov-fail-under=70
       - name: Upload coverage
-        if: matrix.python-version == '3.11'
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report
@@ -66,6 +67,7 @@ jobs:
       - uses: hacs/action@main
         with:
           category: integration
+          ignore: brands
 
   validate-hassfest:
     name: Hassfest Validation

@@ -11,7 +11,6 @@ from custom_components.transportes_pt.const import (
     CONF_LINES,
     CONF_PROVIDER,
     CONF_STOPS,
-    DOMAIN,
     PROVIDER_CARRIS_METROPOLITANA,
 )
 from custom_components.transportes_pt.providers import (

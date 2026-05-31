@@ -3,9 +3,7 @@
 from __future__ import annotations
 
 import time
-from unittest.mock import MagicMock, patch
-
-import pytest
+from unittest.mock import MagicMock
 
 from custom_components.transportes_pt.coordinator import TransportesCoordinator, TransportesData
 from custom_components.transportes_pt.sensor import TransportesArrivalSensor

@@ -29,6 +29,12 @@ class CarrisMetropolitanaProvider(TransitProvider):
         self._owns_session = session is None
 
     @property
+    def session(self) -> aiohttp.ClientSession:
+        """Return the active session."""
+        assert self._session is not None
+        return self._session
+
+    @property
     def provider_id(self) -> str:
         """Unique identifier for this provider."""
         return "carris_metropolitana"
@@ -53,7 +59,7 @@ class CarrisMetropolitanaProvider(TransitProvider):
     async def async_test_connection(self) -> bool:
         """Test if the Carris API is reachable."""
         try:
-            async with self._session.get(
+            async with self.session.get(
                 f"{CARRIS_BASE_URL}/lines", timeout=aiohttp.ClientTimeout(total=10)
             ) as resp:
                 return resp.status == 200
@@ -214,9 +220,7 @@ class CarrisMetropolitanaProvider(TransitProvider):
     async def _api_get(self, url: str) -> Any:
         """Make a GET request to the Carris API."""
         try:
-            async with self._session.get(
-                url, timeout=aiohttp.ClientTimeout(total=15)
-            ) as resp:
+            async with self.session.get(url, timeout=aiohttp.ClientTimeout(total=15)) as resp:
                 if resp.status != 200:
                     _LOGGER.warning("Carris API returned %s for %s", resp.status, url)
                     return None

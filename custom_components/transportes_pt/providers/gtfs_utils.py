@@ -6,7 +6,7 @@ import csv
 import io
 import zipfile
 from dataclasses import dataclass, field
-from datetime import date, datetime, time, timedelta
+from datetime import date, datetime, timedelta
 from typing import Any
 
 
@@ -66,9 +66,7 @@ def parse_gtfs_zip(data: bytes) -> GtfsData:
     return gtfs
 
 
-def _parse_keyed(
-    zf: zipfile.ZipFile, filename: str, key_field: str
-) -> dict[str, dict[str, str]]:
+def _parse_keyed(zf: zipfile.ZipFile, filename: str, key_field: str) -> dict[str, dict[str, str]]:
     """Parse a GTFS CSV file into a dict keyed by key_field."""
     result: dict[str, dict[str, str]] = {}
     with zf.open(filename) as f:
@@ -157,8 +155,13 @@ def is_service_active(gtfs: GtfsData, service_id: str, check_date: date) -> bool
 
     # Check day of week
     day_names = [
-        "monday", "tuesday", "wednesday", "thursday",
-        "friday", "saturday", "sunday",
+        "monday",
+        "tuesday",
+        "wednesday",
+        "thursday",
+        "friday",
+        "saturday",
+        "sunday",
     ]
     day_name = day_names[check_date.weekday()]
     return cal.get(day_name, "0") == "1"

@@ -4,16 +4,13 @@ from __future__ import annotations
 
 import time
 from datetime import timedelta
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
 from custom_components.transportes_pt.coordinator import TransportesCoordinator, TransportesData
 from custom_components.transportes_pt.providers import (
-    Alert,
-    Arrival,
     TransitProvider,
-    VehiclePosition,
 )
 
 from .conftest import MOCK_ALERTS, MOCK_ARRIVALS, MOCK_STOP_ID, MOCK_VEHICLES
@@ -111,7 +108,7 @@ class TestCoordinatorUpdate:
     @pytest.mark.asyncio
     async def test_fetches_multiple_stops(self, mock_hass, mock_provider):
         coord = _make_coordinator(mock_hass, mock_provider, stop_ids=["060002", "060003"])
-        data = await coord._async_update_data()
+        await coord._async_update_data()
         assert mock_provider.async_get_arrivals.call_count == 2
 
     @pytest.mark.asyncio
@@ -166,7 +163,7 @@ class TestCoordinatorUpdate:
             mock_hass, mock_provider, scan_interval_vehicles=timedelta(seconds=15)
         )
         coord._vehicles_last_update = time.time()
-        data = await coord._async_update_data()
+        await coord._async_update_data()
         mock_provider.async_get_vehicles.assert_not_called()
 
     @pytest.mark.asyncio

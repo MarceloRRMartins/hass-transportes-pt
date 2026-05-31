@@ -17,8 +17,7 @@ STCP_DATASET_ID = "5275c986-592c-43f5-8f87-aabbd4e4f3a4"
 
 # NGSI/FIWARE real-time vehicle positions
 STCP_REALTIME_URL = (
-    "https://broker.fiware.urbanplatform.portodigital.pt/v2/entities"
-    "?q=vehicleType==bus&limit=1000"
+    "https://broker.fiware.urbanplatform.portodigital.pt/v2/entities?q=vehicleType==bus&limit=1000"
 )
 
 
@@ -62,7 +61,7 @@ class StcpProvider(GtfsProvider):
     async def _resolve_latest_gtfs_url(self) -> None:
         """Query CKAN API to find the latest GTFS resource URL."""
         try:
-            async with self._session.get(
+            async with self.session.get(
                 STCP_CKAN_API,
                 params={"id": STCP_DATASET_ID},
                 timeout=aiohttp.ClientTimeout(total=10),
@@ -84,15 +83,13 @@ class StcpProvider(GtfsProvider):
         except (aiohttp.ClientError, TimeoutError, KeyError) as err:
             _LOGGER.debug("STCP: Could not resolve latest GTFS URL: %s", err)
 
-    async def async_get_vehicles(
-        self, line_ids: list[str] | None = None
-    ) -> list[VehiclePosition]:
+    async def async_get_vehicles(self, line_ids: list[str] | None = None) -> list[VehiclePosition]:
         """Get real-time vehicle positions from FIWARE/NGSI broker."""
         try:
             headers = {
                 "Accept": "application/json",
             }
-            async with self._session.get(
+            async with self.session.get(
                 STCP_REALTIME_URL,
                 timeout=aiohttp.ClientTimeout(total=15),
                 headers=headers,

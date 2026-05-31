@@ -1,12 +1,12 @@
 {
   "domain": "transportes_pt",
   "name": "Transportes PT",
-  "codeowners": ["@marcelomartins"],
+  "codeowners": ["@MarceloRRMartins"],
   "config_flow": true,
   "dependencies": [],
-  "documentation": "https://github.com/marcelomartins/hass-transportes-pt",
+  "documentation": "https://github.com/MarceloRRMartins/hass-transportes-pt",
   "iot_class": "cloud_polling",
-  "issue_tracker": "https://github.com/marcelomartins/hass-transportes-pt/issues",
+  "issue_tracker": "https://github.com/MarceloRRMartins/hass-transportes-pt/issues",
   "requirements": ["aiohttp>=3.8.0", "gtfs-realtime-bindings>=1.0.0"],
   "version": "0.1.0"
 }

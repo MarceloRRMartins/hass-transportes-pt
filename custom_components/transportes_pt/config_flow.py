@@ -7,18 +7,17 @@ from typing import Any
 
 import aiohttp
 import voluptuous as vol
-
 from homeassistant.config_entries import ConfigFlow
 from homeassistant.data_entry_flow import FlowResult as ConfigFlowResult
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers.selector import (
+    BooleanSelector,
     SelectOptionDict,
     SelectSelector,
     SelectSelectorConfig,
     SelectSelectorMode,
     TextSelector,
     TextSelectorConfig,
-    BooleanSelector,
 )
 
 from .const import (
@@ -80,7 +79,7 @@ PROVIDERS = [
 ]
 
 
-class TransportesPTConfigFlow(ConfigFlow, domain=DOMAIN):
+class TransportesPTConfigFlow(ConfigFlow, domain=DOMAIN):  # type: ignore[call-arg]
     """Handle a config flow for Transportes PT."""
 
     VERSION = 1
@@ -91,9 +90,7 @@ class TransportesPTConfigFlow(ConfigFlow, domain=DOMAIN):
         self._stops: list[str] = []
         self._available_stops: list[dict[str, str]] = []
 
-    async def async_step_user(
-        self, user_input: dict[str, Any] | None = None
-    ) -> ConfigFlowResult:
+    async def async_step_user(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
         """Handle the provider selection step."""
         if user_input is not None:
             self._provider_id = user_input[CONF_PROVIDER]
@@ -103,7 +100,9 @@ class TransportesPTConfigFlow(ConfigFlow, domain=DOMAIN):
             step_id="user",
             data_schema=vol.Schema(
                 {
-                    vol.Required(CONF_PROVIDER, default=PROVIDER_CARRIS_METROPOLITANA): SelectSelector(
+                    vol.Required(
+                        CONF_PROVIDER, default=PROVIDER_CARRIS_METROPOLITANA
+                    ): SelectSelector(
                         SelectSelectorConfig(
                             options=PROVIDERS,
                             mode=SelectSelectorMode.DROPDOWN,
@@ -113,9 +112,7 @@ class TransportesPTConfigFlow(ConfigFlow, domain=DOMAIN):
             ),
         )
 
-    async def async_step_stops(
-        self, user_input: dict[str, Any] | None = None
-    ) -> ConfigFlowResult:
+    async def async_step_stops(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
         """Handle stop selection step."""
         errors: dict[str, str] = {}
 
@@ -205,26 +202,26 @@ class TransportesPTConfigFlow(ConfigFlow, domain=DOMAIN):
         if self._provider_id == PROVIDER_CARRIS_METROPOLITANA:
             return CarrisMetropolitanaProvider(session=session)
 
-        from .providers.carris import CarrisProvider
-        from .providers.stcp import StcpProvider
-        from .providers.metro_porto import MetroPortoProvider
-        from .providers.cp import CpProvider
-        from .providers.metro_lisboa import MetroLisboaProvider
-        from .providers.fertagus import FertagusProvider
-        from .providers.transtejo import TranstejoProvider
-        from .providers.mts import MtsProvider
-        from .providers.tcb import TcbProvider
-        from .providers.tub import TubProvider
-        from .providers.horarios_funchal import HorariosFunchalProvider
-        from .providers.mobicascais import MobiCascaisProvider
-        from .providers.cim_tamega_sousa import CimTsProvider
-        from .providers.busway_coimbra import BuswayCoimbraProvider
         from .providers.busway_cira import BuswayCiraProvider
-        from .providers.mobiave import MobiaveProvider
-        from .providers.tuba import TubaProvider
+        from .providers.busway_coimbra import BuswayCoimbraProvider
+        from .providers.carris import CarrisProvider
+        from .providers.cim_tamega_sousa import CimTsProvider
+        from .providers.cp import CpProvider
+        from .providers.fertagus import FertagusProvider
         from .providers.guimabus import GuimabusProvider
+        from .providers.horarios_funchal import HorariosFunchalProvider
+        from .providers.metro_lisboa import MetroLisboaProvider
+        from .providers.metro_porto import MetroPortoProvider
+        from .providers.mobiave import MobiaveProvider
+        from .providers.mobicascais import MobiCascaisProvider
+        from .providers.mts import MtsProvider
+        from .providers.stcp import StcpProvider
+        from .providers.tcb import TcbProvider
+        from .providers.transtejo import TranstejoProvider
+        from .providers.tub import TubProvider
+        from .providers.tuba import TubaProvider
 
-        providers_map = {
+        providers_map: dict[str, type] = {
             PROVIDER_CARRIS: CarrisProvider,
             PROVIDER_STCP: StcpProvider,
             PROVIDER_METRO_PORTO: MetroPortoProvider,

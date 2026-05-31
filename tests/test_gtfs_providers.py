@@ -2,16 +2,12 @@
 
 from __future__ import annotations
 
-import io
 import csv
+import io
 import zipfile
-from unittest.mock import AsyncMock, MagicMock, patch
-
-import pytest
 
 from custom_components.transportes_pt.providers.gtfs_utils import (
     GtfsData,
-    get_scheduled_arrivals,
     gtfs_time_to_seconds,
     is_service_active,
     parse_gtfs_zip,
@@ -126,16 +122,33 @@ class TestParseGtfsZip:
     def test_parse_trips_and_stop_times(self):
         data = _make_gtfs_zip(
             stops=[
-                {"stop_id": "S001", "stop_name": "A", "stop_lat": "38.7", "stop_lon": "-9.1", "location_type": "0"},
+                {
+                    "stop_id": "S001",
+                    "stop_name": "A",
+                    "stop_lat": "38.7",
+                    "stop_lon": "-9.1",
+                    "location_type": "0",
+                },
             ],
             routes=[
-                {"route_id": "R1", "route_short_name": "15E", "route_long_name": "A-B", "route_type": "0"},
+                {
+                    "route_id": "R1",
+                    "route_short_name": "15E",
+                    "route_long_name": "A-B",
+                    "route_type": "0",
+                },
             ],
             trips=[
                 {"trip_id": "T1", "route_id": "R1", "service_id": "SVC1", "trip_headsign": "Algés"},
             ],
             stop_times=[
-                {"trip_id": "T1", "stop_id": "S001", "arrival_time": "08:00:00", "departure_time": "08:01:00", "stop_sequence": "1"},
+                {
+                    "trip_id": "T1",
+                    "stop_id": "S001",
+                    "arrival_time": "08:00:00",
+                    "departure_time": "08:01:00",
+                    "stop_sequence": "1",
+                },
             ],
         )
         gtfs = parse_gtfs_zip(data)
@@ -174,7 +187,7 @@ class TestParseGtfsZip:
     def test_empty_zip(self):
         """Test that a ZIP with no GTFS files still returns a valid GtfsData."""
         buf = io.BytesIO()
-        with zipfile.ZipFile(buf, "w") as zf:
+        with zipfile.ZipFile(buf, "w"):
             pass  # Empty ZIP
         gtfs = parse_gtfs_zip(buf.getvalue())
         assert gtfs.stops == {}
@@ -183,13 +196,17 @@ class TestParseGtfsZip:
     def test_bom_handling(self):
         """Test that BOM (byte order mark) in CSV is handled."""
         # Create CSV with BOM prefix
-        stops_csv = "\ufeffstop_id,stop_name,stop_lat,stop_lon,location_type\nS001,Test,38.7,-9.1,0\n"
+        stops_csv = (
+            "\ufeffstop_id,stop_name,stop_lat,stop_lon,location_type\nS001,Test,38.7,-9.1,0\n"
+        )
         buf = io.BytesIO()
         with zipfile.ZipFile(buf, "w") as zf:
             zf.writestr("stops.txt", stops_csv)
             zf.writestr("routes.txt", "route_id,route_short_name,route_long_name,route_type\n")
             zf.writestr("trips.txt", "trip_id,route_id,service_id,trip_headsign\n")
-            zf.writestr("stop_times.txt", "trip_id,stop_id,arrival_time,departure_time,stop_sequence\n")
+            zf.writestr(
+                "stop_times.txt", "trip_id,stop_id,arrival_time,departure_time,stop_sequence\n"
+            )
         gtfs = parse_gtfs_zip(buf.getvalue())
         assert "S001" in gtfs.stops
 
@@ -212,9 +229,15 @@ class TestIsServiceActive:
             calendar={
                 "SVC1": {
                     "service_id": "SVC1",
-                    "monday": "1", "tuesday": "1", "wednesday": "1",
-                    "thursday": "1", "friday": "1", "saturday": "0", "sunday": "0",
-                    "start_date": "20260101", "end_date": "20261231",
+                    "monday": "1",
+                    "tuesday": "1",
+                    "wednesday": "1",
+                    "thursday": "1",
+                    "friday": "1",
+                    "saturday": "0",
+                    "sunday": "0",
+                    "start_date": "20260101",
+                    "end_date": "20261231",
                 }
             },
             calendar_dates={},
@@ -237,14 +260,18 @@ class TestIsServiceActive:
             calendar={
                 "SVC1": {
                     "service_id": "SVC1",
-                    "monday": "0", "tuesday": "0", "wednesday": "0",
-                    "thursday": "0", "friday": "0", "saturday": "0", "sunday": "0",
-                    "start_date": "20260101", "end_date": "20261231",
+                    "monday": "0",
+                    "tuesday": "0",
+                    "wednesday": "0",
+                    "thursday": "0",
+                    "friday": "0",
+                    "saturday": "0",
+                    "sunday": "0",
+                    "start_date": "20260101",
+                    "end_date": "20261231",
                 }
             },
-            calendar_dates=[
-                {"service_id": "SVC1", "date": "20260529", "exception_type": "1"}
-            ],
+            calendar_dates=[{"service_id": "SVC1", "date": "20260529", "exception_type": "1"}],
             stop_routes={},
         )
         # Normally no service on Friday but exception adds it
@@ -262,14 +289,18 @@ class TestIsServiceActive:
             calendar={
                 "SVC1": {
                     "service_id": "SVC1",
-                    "monday": "1", "tuesday": "1", "wednesday": "1",
-                    "thursday": "1", "friday": "1", "saturday": "1", "sunday": "1",
-                    "start_date": "20260101", "end_date": "20261231",
+                    "monday": "1",
+                    "tuesday": "1",
+                    "wednesday": "1",
+                    "thursday": "1",
+                    "friday": "1",
+                    "saturday": "1",
+                    "sunday": "1",
+                    "start_date": "20260101",
+                    "end_date": "20261231",
                 }
             },
-            calendar_dates=[
-                {"service_id": "SVC1", "date": "20260529", "exception_type": "2"}
-            ],
+            calendar_dates=[{"service_id": "SVC1", "date": "20260529", "exception_type": "2"}],
             stop_routes={},
         )
         # Normally service on Friday but exception removes it
@@ -284,31 +315,46 @@ class TestProviderProperties:
 
     def test_all_providers_import(self):
         """Verify all provider classes can be imported."""
-        from custom_components.transportes_pt.providers.carris import CarrisProvider
-        from custom_components.transportes_pt.providers.stcp import StcpProvider
-        from custom_components.transportes_pt.providers.metro_porto import MetroPortoProvider
-        from custom_components.transportes_pt.providers.cp import CpProvider
-        from custom_components.transportes_pt.providers.metro_lisboa import MetroLisboaProvider
-        from custom_components.transportes_pt.providers.fertagus import FertagusProvider
-        from custom_components.transportes_pt.providers.transtejo import TranstejoProvider
-        from custom_components.transportes_pt.providers.mts import MtsProvider
-        from custom_components.transportes_pt.providers.tcb import TcbProvider
-        from custom_components.transportes_pt.providers.tub import TubProvider
-        from custom_components.transportes_pt.providers.horarios_funchal import HorariosFunchalProvider
-        from custom_components.transportes_pt.providers.mobicascais import MobiCascaisProvider
-        from custom_components.transportes_pt.providers.cim_tamega_sousa import CimTsProvider
-        from custom_components.transportes_pt.providers.busway_coimbra import BuswayCoimbraProvider
         from custom_components.transportes_pt.providers.busway_cira import BuswayCiraProvider
-        from custom_components.transportes_pt.providers.mobiave import MobiaveProvider
-        from custom_components.transportes_pt.providers.tuba import TubaProvider
+        from custom_components.transportes_pt.providers.busway_coimbra import BuswayCoimbraProvider
+        from custom_components.transportes_pt.providers.carris import CarrisProvider
+        from custom_components.transportes_pt.providers.cim_tamega_sousa import CimTsProvider
+        from custom_components.transportes_pt.providers.cp import CpProvider
+        from custom_components.transportes_pt.providers.fertagus import FertagusProvider
         from custom_components.transportes_pt.providers.guimabus import GuimabusProvider
+        from custom_components.transportes_pt.providers.horarios_funchal import (
+            HorariosFunchalProvider,
+        )
+        from custom_components.transportes_pt.providers.metro_lisboa import MetroLisboaProvider
+        from custom_components.transportes_pt.providers.metro_porto import MetroPortoProvider
+        from custom_components.transportes_pt.providers.mobiave import MobiaveProvider
+        from custom_components.transportes_pt.providers.mobicascais import MobiCascaisProvider
+        from custom_components.transportes_pt.providers.mts import MtsProvider
+        from custom_components.transportes_pt.providers.stcp import StcpProvider
+        from custom_components.transportes_pt.providers.tcb import TcbProvider
+        from custom_components.transportes_pt.providers.transtejo import TranstejoProvider
+        from custom_components.transportes_pt.providers.tub import TubProvider
+        from custom_components.transportes_pt.providers.tuba import TubaProvider
 
         providers = [
-            CarrisProvider(), StcpProvider(), MetroPortoProvider(), CpProvider(),
-            MetroLisboaProvider(), FertagusProvider(), TranstejoProvider(), MtsProvider(),
-            TcbProvider(), TubProvider(), HorariosFunchalProvider(), MobiCascaisProvider(),
-            CimTsProvider(), BuswayCoimbraProvider(), BuswayCiraProvider(),
-            MobiaveProvider(), TubaProvider(), GuimabusProvider(),
+            CarrisProvider(),
+            StcpProvider(),
+            MetroPortoProvider(),
+            CpProvider(),
+            MetroLisboaProvider(),
+            FertagusProvider(),
+            TranstejoProvider(),
+            MtsProvider(),
+            TcbProvider(),
+            TubProvider(),
+            HorariosFunchalProvider(),
+            MobiCascaisProvider(),
+            CimTsProvider(),
+            BuswayCoimbraProvider(),
+            BuswayCiraProvider(),
+            MobiaveProvider(),
+            TubaProvider(),
+            GuimabusProvider(),
         ]
         assert len(providers) == 18
         for p in providers:
@@ -343,8 +389,8 @@ class TestProviderProperties:
 
     def test_stcp_has_ngsi_override(self):
         """Test STCP overrides async_get_vehicles for NGSI."""
-        from custom_components.transportes_pt.providers.stcp import StcpProvider
         from custom_components.transportes_pt.providers.gtfs_base import GtfsProvider
+        from custom_components.transportes_pt.providers.stcp import StcpProvider
 
         p = StcpProvider()
         # The method should be overridden (not from base class)

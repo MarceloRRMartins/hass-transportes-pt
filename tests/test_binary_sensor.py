@@ -4,8 +4,6 @@ from __future__ import annotations
 
 from unittest.mock import MagicMock
 
-import pytest
-
 from custom_components.transportes_pt.binary_sensor import TransportesAlertSensor
 from custom_components.transportes_pt.const import CONF_LINES, CONF_STOPS
 from custom_components.transportes_pt.coordinator import TransportesCoordinator, TransportesData

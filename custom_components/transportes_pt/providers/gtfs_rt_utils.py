@@ -7,7 +7,7 @@ from typing import Any
 
 from google.transit import gtfs_realtime_pb2
 
-from . import Alert, Arrival, VehiclePosition
+from . import Alert, VehiclePosition
 
 _LOGGER = logging.getLogger(__name__)
 

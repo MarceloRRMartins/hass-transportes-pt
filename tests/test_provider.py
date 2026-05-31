@@ -2,15 +2,13 @@
 
 from __future__ import annotations
 
-import json
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
 from custom_components.transportes_pt.providers.carris_metropolitana import (
     CarrisMetropolitanaProvider,
 )
-
 
 MOCK_ARRIVALS_JSON = [
     {

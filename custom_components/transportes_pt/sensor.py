@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
 import logging
+from datetime import UTC, datetime
 
 from homeassistant.components.sensor import SensorEntity, SensorStateClass
 from homeassistant.config_entries import ConfigEntry
@@ -12,7 +12,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .const import CONF_STOPS, DOMAIN
-from .coordinator import TransportesCoordinator, TransportesData
+from .coordinator import TransportesCoordinator
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -27,8 +27,7 @@ async def async_setup_entry(
     stop_ids = entry.data[CONF_STOPS]
 
     entities = [
-        TransportesArrivalSensor(coordinator, stop_id, entry.entry_id)
-        for stop_id in stop_ids
+        TransportesArrivalSensor(coordinator, stop_id, entry.entry_id) for stop_id in stop_ids
     ]
     async_add_entities(entities)
 
@@ -71,6 +70,7 @@ class TransportesArrivalSensor(CoordinatorEntity[TransportesCoordinator], Sensor
         eta_unix = first.estimated_arrival_unix or first.scheduled_arrival_unix
         if eta_unix:
             import time
+
             diff = (eta_unix - time.time()) / 60
             return max(0, round(diff))
 
@@ -81,7 +81,7 @@ class TransportesArrivalSensor(CoordinatorEntity[TransportesCoordinator], Sensor
 
         try:
             arrival_time = datetime.fromisoformat(eta.replace("Z", "+00:00"))
-            now = datetime.now(timezone.utc)
+            now = datetime.now(UTC)
             diff = (arrival_time - now).total_seconds() / 60
             return max(0, round(diff))
         except (ValueError, TypeError):

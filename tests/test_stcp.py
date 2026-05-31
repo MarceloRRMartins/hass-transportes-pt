@@ -2,19 +2,14 @@
 
 from __future__ import annotations
 
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import AsyncMock, MagicMock
 
 import aiohttp
 import pytest
 
 from custom_components.transportes_pt.providers.stcp import (
-    STCP_CKAN_API,
-    STCP_DATASET_ID,
-    STCP_REALTIME_URL,
     StcpProvider,
 )
-from custom_components.transportes_pt.providers import VehiclePosition
-
 
 MOCK_CKAN_RESPONSE = {
     "success": True,

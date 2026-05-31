@@ -2,18 +2,19 @@
 
 from __future__ import annotations
 
-import io
 import csv
+import io
 import time
 import zipfile
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import AsyncMock, MagicMock
 
 import aiohttp
 import pytest
 
-from custom_components.transportes_pt.providers.gtfs_base import GtfsProvider, DEFAULT_GTFS_CACHE_TTL
-from custom_components.transportes_pt.providers.gtfs_utils import GtfsData
-from custom_components.transportes_pt.providers import Stop, Line, Arrival
+from custom_components.transportes_pt.providers.gtfs_base import (
+    DEFAULT_GTFS_CACHE_TTL,
+    GtfsProvider,
+)
 
 
 class ConcreteProvider(GtfsProvider):
@@ -98,27 +99,123 @@ def _make_gtfs_zip() -> bytes:
 
     buf = io.BytesIO()
     with zipfile.ZipFile(buf, "w") as zf:
-        zf.writestr("stops.txt", csv_str([
-            {"stop_id": "S1", "stop_name": "Praça A", "stop_lat": "38.7", "stop_lon": "-9.1", "location_type": "0", "zone_id": "Lisboa"},
-            {"stop_id": "S2", "stop_name": "Estação B", "stop_lat": "38.8", "stop_lon": "-9.2", "location_type": "0", "zone_id": "Porto"},
-            {"stop_id": "ST1", "stop_name": "Station", "stop_lat": "38.7", "stop_lon": "-9.1", "location_type": "1"},  # station, not stop
-        ]))
-        zf.writestr("routes.txt", csv_str([
-            {"route_id": "R1", "route_short_name": "15E", "route_long_name": "Praça - Algés", "route_type": "0", "route_color": "FFCC00"},
-            {"route_id": "R2", "route_short_name": "28E", "route_long_name": "Graça - Prazeres", "route_type": "0", "route_color": "FF0000"},
-        ]))
-        zf.writestr("trips.txt", csv_str([
-            {"trip_id": "T1", "route_id": "R1", "service_id": "SVC1", "trip_headsign": "Algés"},
-            {"trip_id": "T2", "route_id": "R2", "service_id": "SVC1", "trip_headsign": "Prazeres"},
-        ]))
-        zf.writestr("stop_times.txt", csv_str([
-            {"trip_id": "T1", "stop_id": "S1", "arrival_time": "08:00:00", "departure_time": "08:01:00", "stop_sequence": "1"},
-            {"trip_id": "T1", "stop_id": "S2", "arrival_time": "08:30:00", "departure_time": "08:31:00", "stop_sequence": "2"},
-            {"trip_id": "T2", "stop_id": "S1", "arrival_time": "08:15:00", "departure_time": "08:16:00", "stop_sequence": "1"},
-        ]))
-        zf.writestr("calendar.txt", csv_str([
-            {"service_id": "SVC1", "monday": "1", "tuesday": "1", "wednesday": "1", "thursday": "1", "friday": "1", "saturday": "0", "sunday": "0", "start_date": "20260101", "end_date": "20261231"},
-        ]))
+        zf.writestr(
+            "stops.txt",
+            csv_str(
+                [
+                    {
+                        "stop_id": "S1",
+                        "stop_name": "Praça A",
+                        "stop_lat": "38.7",
+                        "stop_lon": "-9.1",
+                        "location_type": "0",
+                        "zone_id": "Lisboa",
+                    },
+                    {
+                        "stop_id": "S2",
+                        "stop_name": "Estação B",
+                        "stop_lat": "38.8",
+                        "stop_lon": "-9.2",
+                        "location_type": "0",
+                        "zone_id": "Porto",
+                    },
+                    {
+                        "stop_id": "ST1",
+                        "stop_name": "Station",
+                        "stop_lat": "38.7",
+                        "stop_lon": "-9.1",
+                        "location_type": "1",
+                    },  # station, not stop
+                ]
+            ),
+        )
+        zf.writestr(
+            "routes.txt",
+            csv_str(
+                [
+                    {
+                        "route_id": "R1",
+                        "route_short_name": "15E",
+                        "route_long_name": "Praça - Algés",
+                        "route_type": "0",
+                        "route_color": "FFCC00",
+                    },
+                    {
+                        "route_id": "R2",
+                        "route_short_name": "28E",
+                        "route_long_name": "Graça - Prazeres",
+                        "route_type": "0",
+                        "route_color": "FF0000",
+                    },
+                ]
+            ),
+        )
+        zf.writestr(
+            "trips.txt",
+            csv_str(
+                [
+                    {
+                        "trip_id": "T1",
+                        "route_id": "R1",
+                        "service_id": "SVC1",
+                        "trip_headsign": "Algés",
+                    },
+                    {
+                        "trip_id": "T2",
+                        "route_id": "R2",
+                        "service_id": "SVC1",
+                        "trip_headsign": "Prazeres",
+                    },
+                ]
+            ),
+        )
+        zf.writestr(
+            "stop_times.txt",
+            csv_str(
+                [
+                    {
+                        "trip_id": "T1",
+                        "stop_id": "S1",
+                        "arrival_time": "08:00:00",
+                        "departure_time": "08:01:00",
+                        "stop_sequence": "1",
+                    },
+                    {
+                        "trip_id": "T1",
+                        "stop_id": "S2",
+                        "arrival_time": "08:30:00",
+                        "departure_time": "08:31:00",
+                        "stop_sequence": "2",
+                    },
+                    {
+                        "trip_id": "T2",
+                        "stop_id": "S1",
+                        "arrival_time": "08:15:00",
+                        "departure_time": "08:16:00",
+                        "stop_sequence": "1",
+                    },
+                ]
+            ),
+        )
+        zf.writestr(
+            "calendar.txt",
+            csv_str(
+                [
+                    {
+                        "service_id": "SVC1",
+                        "monday": "1",
+                        "tuesday": "1",
+                        "wednesday": "1",
+                        "thursday": "1",
+                        "friday": "1",
+                        "saturday": "0",
+                        "sunday": "0",
+                        "start_date": "20260101",
+                        "end_date": "20261231",
+                    },
+                ]
+            ),
+        )
     return buf.getvalue()
 
 
@@ -385,11 +482,11 @@ class TestGtfsProviderLines:
         lines = await p.async_get_lines()
 
         assert len(lines) == 2
-        line_ids = [l.line_id for l in lines]
+        line_ids = [ln.line_id for ln in lines]
         assert "R1" in line_ids
         assert "R2" in line_ids
 
-        r1 = next(l for l in lines if l.line_id == "R1")
+        r1 = next(ln for ln in lines if ln.line_id == "R1")
         assert r1.short_name == "15E"
         assert r1.long_name == "Praça - Algés"
         assert r1.color == "FFCC00"

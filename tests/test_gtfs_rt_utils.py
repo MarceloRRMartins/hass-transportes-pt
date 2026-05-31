@@ -124,9 +124,7 @@ class TestParseVehiclePositions:
         assert result[0].vehicle_id == "V1"
 
     def test_skip_no_position(self):
-        data = _make_vehicle_feed(
-            {"id": "V1", "route_id": "R1", "lat": 0.0, "lon": 0.0}
-        )
+        data = _make_vehicle_feed({"id": "V1", "route_id": "R1", "lat": 0.0, "lon": 0.0})
         result = parse_vehicle_positions(data)
         assert len(result) == 0
 

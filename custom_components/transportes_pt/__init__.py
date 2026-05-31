@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+from typing import TypeAlias
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
@@ -42,12 +43,10 @@ from .services import async_setup_services, async_unload_services
 
 _LOGGER = logging.getLogger(__name__)
 
-TransportesConfigEntry = ConfigEntry
+TransportesConfigEntry: TypeAlias = ConfigEntry
 
 
-def _create_provider(
-    provider_id: str, hass: HomeAssistant
-) -> TransitProvider:
+def _create_provider(provider_id: str, hass: HomeAssistant) -> TransitProvider:
     """Create a transit provider instance."""
     session = async_get_clientsession(hass)
     if provider_id == PROVIDER_CARRIS_METROPOLITANA:
@@ -56,57 +55,75 @@ def _create_provider(
     # Lazy-import GTFS-based providers to avoid import overhead
     if provider_id == PROVIDER_CARRIS:
         from .providers.carris import CarrisProvider
+
         return CarrisProvider(session=session)
     if provider_id == PROVIDER_STCP:
         from .providers.stcp import StcpProvider
+
         return StcpProvider(session=session)
     if provider_id == PROVIDER_METRO_PORTO:
         from .providers.metro_porto import MetroPortoProvider
+
         return MetroPortoProvider(session=session)
     if provider_id == PROVIDER_CP:
         from .providers.cp import CpProvider
+
         return CpProvider(session=session)
     if provider_id == PROVIDER_METRO_LISBOA:
         from .providers.metro_lisboa import MetroLisboaProvider
+
         return MetroLisboaProvider(session=session)
     if provider_id == PROVIDER_FERTAGUS:
         from .providers.fertagus import FertagusProvider
+
         return FertagusProvider(session=session)
     if provider_id == PROVIDER_TRANSTEJO:
         from .providers.transtejo import TranstejoProvider
+
         return TranstejoProvider(session=session)
     if provider_id == PROVIDER_MTS:
         from .providers.mts import MtsProvider
+
         return MtsProvider(session=session)
     if provider_id == PROVIDER_TCB:
         from .providers.tcb import TcbProvider
+
         return TcbProvider(session=session)
     if provider_id == PROVIDER_TUB:
         from .providers.tub import TubProvider
+
         return TubProvider(session=session)
     if provider_id == PROVIDER_HORARIOS_FUNCHAL:
         from .providers.horarios_funchal import HorariosFunchalProvider
+
         return HorariosFunchalProvider(session=session)
     if provider_id == PROVIDER_MOBICASCAIS:
         from .providers.mobicascais import MobiCascaisProvider
+
         return MobiCascaisProvider(session=session)
     if provider_id == PROVIDER_CIM_TAMEGA_SOUSA:
         from .providers.cim_tamega_sousa import CimTsProvider
+
         return CimTsProvider(session=session)
     if provider_id == PROVIDER_BUSWAY_COIMBRA:
         from .providers.busway_coimbra import BuswayCoimbraProvider
+
         return BuswayCoimbraProvider(session=session)
     if provider_id == PROVIDER_BUSWAY_CIRA:
         from .providers.busway_cira import BuswayCiraProvider
+
         return BuswayCiraProvider(session=session)
     if provider_id == PROVIDER_MOBIAVE:
         from .providers.mobiave import MobiaveProvider
+
         return MobiaveProvider(session=session)
     if provider_id == PROVIDER_TUBA:
         from .providers.tuba import TubaProvider
+
         return TubaProvider(session=session)
     if provider_id == PROVIDER_GUIMABUS:
         from .providers.guimabus import GuimabusProvider
+
         return GuimabusProvider(session=session)
 
     raise ValueError(f"Unknown provider: {provider_id}")

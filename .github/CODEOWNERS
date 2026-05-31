@@ -3,14 +3,14 @@
 # See: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
 
 # Default owner — reviews everything
-* @marcelomartins
+* @MarceloRRMartins
 
 # Provider-specific ownership
-custom_components/transportes_pt/providers/ @marcelomartins
+custom_components/transportes_pt/providers/ @MarceloRRMartins
 
 # CI and automation
-.github/ @marcelomartins
+.github/ @MarceloRRMartins
 
 # Config flow and integration setup
-custom_components/transportes_pt/config_flow.py @marcelomartins
-custom_components/transportes_pt/__init__.py @marcelomartins
+custom_components/transportes_pt/config_flow.py @MarceloRRMartins
+custom_components/transportes_pt/__init__.py @MarceloRRMartins

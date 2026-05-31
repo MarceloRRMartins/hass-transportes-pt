@@ -2,16 +2,11 @@
 
 from __future__ import annotations
 
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import MagicMock
 
 import pytest
 
 from custom_components.transportes_pt.const import (
-    CONF_ENABLE_VEHICLES,
-    CONF_LINES,
-    CONF_PROVIDER,
-    CONF_STOPS,
-    DOMAIN,
     PROVIDER_CARRIS_METROPOLITANA,
     PROVIDER_CP,
     PROVIDER_STCP,
@@ -64,22 +59,22 @@ class TestCreateFlowProvider:
     def test_all_providers_are_mapped(self):
         """Verify every known provider can be created."""
         from custom_components.transportes_pt.const import (
+            PROVIDER_BUSWAY_CIRA,
+            PROVIDER_BUSWAY_COIMBRA,
             PROVIDER_CARRIS,
+            PROVIDER_CIM_TAMEGA_SOUSA,
+            PROVIDER_FERTAGUS,
+            PROVIDER_GUIMABUS,
+            PROVIDER_HORARIOS_FUNCHAL,
             PROVIDER_METRO_LISBOA,
             PROVIDER_METRO_PORTO,
-            PROVIDER_FERTAGUS,
-            PROVIDER_TRANSTEJO,
+            PROVIDER_MOBIAVE,
+            PROVIDER_MOBICASCAIS,
             PROVIDER_MTS,
             PROVIDER_TCB,
+            PROVIDER_TRANSTEJO,
             PROVIDER_TUB,
             PROVIDER_TUBA,
-            PROVIDER_GUIMABUS,
-            PROVIDER_MOBIAVE,
-            PROVIDER_CIM_TAMEGA_SOUSA,
-            PROVIDER_BUSWAY_COIMBRA,
-            PROVIDER_BUSWAY_CIRA,
-            PROVIDER_HORARIOS_FUNCHAL,
-            PROVIDER_MOBICASCAIS,
         )
 
         session = MagicMock()

@@ -4,8 +4,6 @@ from __future__ import annotations
 
 from unittest.mock import MagicMock
 
-import pytest
-
 from custom_components.transportes_pt.coordinator import TransportesCoordinator, TransportesData
 from custom_components.transportes_pt.device_tracker import TransportesVehicleTracker
 from custom_components.transportes_pt.providers import VehiclePosition

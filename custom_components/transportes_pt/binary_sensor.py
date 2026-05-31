@@ -27,9 +27,7 @@ async def async_setup_entry(
     """Set up alert binary sensors from a config entry."""
     coordinator: TransportesCoordinator = hass.data[DOMAIN][entry.entry_id]
 
-    async_add_entities(
-        [TransportesAlertSensor(coordinator, entry)]
-    )
+    async_add_entities([TransportesAlertSensor(coordinator, entry)])
 
 
 class TransportesAlertSensor(CoordinatorEntity[TransportesCoordinator], BinarySensorEntity):
