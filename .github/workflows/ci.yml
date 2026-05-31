@@ -50,7 +50,10 @@ jobs:
           python-version: ${{ matrix.python-version }}
           cache: pip
       - run: |
-          pip install pytest pytest-asyncio pytest-cov aiohttp gtfs-realtime-bindings voluptuous python-slugify pyyaml
+          pip install --upgrade pip setuptools wheel
+          pip install pytest pytest-asyncio pytest-cov
+          pip install aiohttp voluptuous python-slugify pyyaml async-interrupt
+          pip install gtfs-realtime-bindings
           pip install homeassistant --no-deps
       - run: pytest tests/ -v --cov=custom_components/transportes_pt --cov-report=xml --cov-report=term-missing --cov-fail-under=70
       - name: Upload coverage
