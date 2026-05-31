@@ -25,7 +25,7 @@ Integração custom para [Home Assistant](https://www.home-assistant.io/) com da
 | Operador | Tipo | Tempo Real | Fonte |
 |----------|------|:----------:|-------|
 | STCP | Autocarro | ✅ | GTFS + NGSI/FIWARE |
-| Metro do Porto | Metro | 🕒 | GTFS Static |
+| Metro do Porto | Metro | ⚡ | GTFS + HTML scraping (alertas) |
 
 ### Nacional
 
