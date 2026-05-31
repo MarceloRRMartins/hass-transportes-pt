@@ -31,7 +31,7 @@ Integração custom para [Home Assistant](https://www.home-assistant.io/) com da
 
 | Operador | Tipo | Tempo Real | Fonte |
 |----------|------|:----------:|-------|
-| CP — Comboios de Portugal | Comboio | 🕒 | GTFS Static |
+| CP — Comboios de Portugal | Comboio | ⚡ | GTFS + GTFS-RT + comboios.live API |
 
 ### Norte
 
@@ -66,7 +66,8 @@ Integração custom para [Home Assistant](https://www.home-assistant.io/) com da
 - **Horários GTFS** — se não há tempo real, mostra o horário programado
 - **Alertas de serviço** — notificação de perturbações nas tuas linhas/paragens (Metro de Lisboa: estado operacional por linha em tempo real)
 - **Tempos de espera Metro de Lisboa** — minutos estimados até o próximo comboio, por estação
-- **Rastreamento de veículos** — posição GPS dos autocarros em tempo real (Carris Metropolitana, Carris CCFL, STCP)
+- **Rastreamento de veículos** — posição GPS dos autocarros em tempo real (Carris Metropolitana, Carris CCFL, STCP) e comboios CP
+- **Comboios CP em tempo real** — chegadas com atraso, posição GPS, velocidade, bearing e alertas de comboios suprimidos via comboios.live
 - **Config Flow UI** — configuração visual sem editar YAML
 - **Multi-operador** — configura várias integrações lado a lado
 - **Traduções** — Português e Inglês

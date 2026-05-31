@@ -380,9 +380,9 @@ class TestProviderProperties:
 
     def test_default_provider_no_realtime(self):
         """Test that basic providers have no GTFS-RT URLs."""
-        from custom_components.transportes_pt.providers.cp import CpProvider
+        from custom_components.transportes_pt.providers.fertagus import FertagusProvider
 
-        p = CpProvider()
+        p = FertagusProvider()
         assert p.gtfs_rt_vehicle_positions_url is None
         assert p.gtfs_rt_trip_updates_url is None
         assert p.gtfs_rt_alerts_url is None
