@@ -13,7 +13,7 @@ Integração custom para [Home Assistant](https://www.home-assistant.io/) com da
 |----------|------|:----------:|-------|
 | Carris Metropolitana | Autocarro | ✅ | REST API |
 | Carris (CCFL) | Autocarro + Eléctrico | ✅ | GTFS + GTFS-RT |
-| Metro de Lisboa | Metro | 🕒 | GTFS Static |
+| Metro de Lisboa | Metro | ⚡ | GTFS + API (alertas + tempos de espera) |
 | Transtejo Soflusa | Ferry | 🕒 | GTFS Static |
 | Fertagus | Comboio suburbano | 🕒 | GTFS Static |
 | MTS — Metro Sul do Tejo | Metro ligeiro | 🕒 | GTFS Static |
@@ -57,13 +57,15 @@ Integração custom para [Home Assistant](https://www.home-assistant.io/) com da
 | Horários do Funchal | Autocarro | 🕒 | GTFS Static |
 
 > ✅ = tempo real (posição GPS e ETAs)  
+> ⚡ = tempo real parcial (alertas de serviço e tempos de espera estimados)  
 > 🕒 = horário estático (chegadas baseadas no calendário GTFS)
 
 ## Funcionalidades
 
 - **Chegadas em tempo real** — minutos até o próximo autocarro, com detalhes de linha e destino
 - **Horários GTFS** — se não há tempo real, mostra o horário programado
-- **Alertas de serviço** — notificação de perturbações nas tuas linhas/paragens
+- **Alertas de serviço** — notificação de perturbações nas tuas linhas/paragens (Metro de Lisboa: estado operacional por linha em tempo real)
+- **Tempos de espera Metro de Lisboa** — minutos estimados até o próximo comboio, por estação
 - **Rastreamento de veículos** — posição GPS dos autocarros em tempo real (Carris Metropolitana, Carris CCFL, STCP)
 - **Config Flow UI** — configuração visual sem editar YAML
 - **Multi-operador** — configura várias integrações lado a lado
@@ -151,7 +153,7 @@ providers/
 ├── stcp.py              # GTFS + NGSI/FIWARE realtime
 ├── metro_porto.py       # GTFS Static
 ├── cp.py                # GTFS Static
-├── metro_lisboa.py      # GTFS Static (custom headers)
+├── metro_lisboa.py      # GTFS + API (alertas + tempos de espera)
 ├── fertagus.py          # GTFS Static
 ├── transtejo.py         # GTFS Static
 ├── mts.py               # GTFS Static
