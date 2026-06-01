@@ -28,6 +28,10 @@ PROVIDER_GUIMABUS = "guimabus"
 # Carris Metropolitana API v2
 CARRIS_BASE_URL = "https://api.carrismetropolitana.pt/v2"
 
+# Transtejo Soflusa (WordPress REST API)
+TTSL_BASE_URL = "https://ttsl.pt/wp-json/wp/v2"
+TTSL_PAGE_ID = 24
+
 # Default polling intervals
 DEFAULT_SCAN_INTERVAL_ARRIVALS = timedelta(seconds=30)
 DEFAULT_SCAN_INTERVAL_ALERTS = timedelta(minutes=5)

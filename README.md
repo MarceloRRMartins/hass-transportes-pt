@@ -14,7 +14,7 @@ Integração custom para [Home Assistant](https://www.home-assistant.io/) com da
 | Carris Metropolitana | Autocarro | ✅ | REST API |
 | Carris (CCFL) | Autocarro + Eléctrico | ✅ | GTFS + GTFS-RT |
 | Metro de Lisboa | Metro | ⚡ | GTFS + API (alertas + tempos de espera) |
-| Transtejo Soflusa | Ferry | 🕒 | GTFS Static |
+| Transtejo Soflusa | Ferry | ⚡ | WordPress REST API (partidas RT + avisos) |
 | Fertagus | Comboio suburbano | 🕒 | GTFS Static |
 | MTS — Metro Sul do Tejo | Metro ligeiro | 🕒 | GTFS Static |
 | TCB (Barreiro) | Autocarro | 🕒 | GTFS Static |
@@ -156,7 +156,7 @@ providers/
 ├── cp.py                # GTFS Static
 ├── metro_lisboa.py      # GTFS + API (alertas + tempos de espera)
 ├── fertagus.py          # GTFS Static
-├── transtejo.py         # GTFS Static
+├── transtejo.py         # WordPress REST API (tempo real)
 ├── mts.py               # GTFS Static
 ├── tcb.py               # GTFS Static
 ├── tub.py               # GTFS Static

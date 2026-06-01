@@ -360,8 +360,9 @@ class TestProviderProperties:
         for p in providers:
             assert p.provider_id
             assert p.name
-            assert p.gtfs_url
-            assert p.gtfs_url.startswith("http")
+            if hasattr(p, "gtfs_url"):
+                assert p.gtfs_url
+                assert p.gtfs_url.startswith("http")
 
     def test_metro_lisboa_custom_headers(self):
         """Test Metro de Lisboa has User-Agent header."""
